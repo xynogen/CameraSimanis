@@ -101,4 +101,4 @@ def capture():
 if __name__ == '__main__':
     debug = True if DEBUG == 'true' else False
 
-    app.run('0.0.0.0', port=HOST_CAMERA, debug=debug)
+    app.run('0.0.0.0', port=PORT_CAMERA, debug=debug)

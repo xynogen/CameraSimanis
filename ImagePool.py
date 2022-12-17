@@ -16,9 +16,6 @@ import datetime
 load_dotenv()
 API_KEY = os.environ['API_KEY']
 
-CLASSIFIER_HOST = os.environ['CLASSIFIER_HOST']
-CLASSIFIER_PORT = os.environ['CLASSIFIER_PORT']
-
 HOST_CAMERA = os.environ['HOST_CAMERA']
 PORT_CAMERA = os.environ['PORT_CAMERA']
 URL = f'http://{HOST_CAMERA}:{PORT_CAMERA}/api/camera/capture?api_key={API_KEY}'
@@ -39,10 +36,9 @@ firebase_app = firebase_admin.initialize_app(cred, {"storageBucket": FIREBASE_BU
 ref = db.reference(url=FIREBASE_URL, app=firebase_app)
 
 while True:
-    # response = requests.get(URL, stream=True).raw
-    # image = np.asarray(bytearray(response.read()), dtype="uint8")
-    # image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-    image = cv2.imread('testing_image.jpg', cv2.IMREAD_COLOR)
+    response = requests.get(URL, stream=True).raw
+    image = np.asarray(bytearray(response.read()), dtype="uint8")
+    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
     img_H = image.shape[0]
     img_W = image.shape[1]
 
