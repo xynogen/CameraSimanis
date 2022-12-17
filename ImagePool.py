@@ -39,8 +39,14 @@ while True:
     response = requests.get(URL, stream=True).raw
     image = np.asarray(bytearray(response.read()), dtype="uint8")
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-    img_H = image.shape[0]
-    img_W = image.shape[1]
+    process = True
+    try:
+        img_H = image.shape[0]
+        img_W = image.shape[1]
+    except:
+        print('[Warning] Cannot Reach to Camera')
+        process = False
+
 
     # for testing
     if DEBUG == 'true':
@@ -59,21 +65,23 @@ while True:
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    FILENAME = 'Sungai.jpg'
-    FILEPATH = f'./{TEMP_FOLDER}/{FILENAME}'
-    status = cv2.imwrite(FILEPATH, image)
+    if process:
+        FILENAME = 'Sungai.jpg'
+        FILEPATH = f'./{TEMP_FOLDER}/{FILENAME}'
+        status = cv2.imwrite(FILEPATH, image)
 
-    if not status:
-        print('[Warning] Failed to Write Image') 
+        if not status:
+            print('[Warning] Failed to Write Image') 
 
-    bucket = storage.bucket(app=firebase_app)
-    blob = bucket.blob(FILENAME)
-    blob.upload_from_filename(FILEPATH)
+        bucket = storage.bucket(app=firebase_app)
+        blob = bucket.blob(FILENAME)
+        blob.upload_from_filename(FILEPATH)
 
-    counter = ref.child('data_counter').get()
-    counter = int(counter) +1 
-    counter = str(counter)
-    ref.child('data_counter').set(counter)
-    print("[INFO] Image Has Been Uploaded")
+        counter = ref.child('data_counter').get()
+        counter = int(counter) +1 
+        counter = str(counter)
+        ref.child('data_counter').set(counter)
+        print("[INFO] Image Has Been Uploaded")
+
 
     time.sleep(INTERVAL)
