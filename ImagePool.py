@@ -76,6 +76,7 @@ while True:
         bucket = storage.bucket(app=firebase_app)
         blob = bucket.blob(FILENAME)
         blob.upload_from_filename(FILEPATH)
+        blob.delete()
 
         counter = ref.child('data_counter').get()
         counter = int(counter) +1 
